@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainCategoryDropdown = document.querySelector('#mainCategory');
+        const subCategoryDropdown = document.querySelector('#subCategory');
+
+        mainCategoryDropdown.addEventListener('change', function () {
+            const selectedMainCategory = this.value;
+
+            // Clear existing subcategories
+            subCategoryDropdown.innerHTML = '<option value="">Select a subcategory</option>';
+
+            if (selectedMainCategory) {
+                // Fetch subcategories dynamically
+                fetch(`/get_subcategories?mainCategory=${selectedMainCategory}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.subcategories) {
+                            data.subcategories.forEach(subcategory => {
+                                const option = document.createElement('option');
+                                option.value = subcategory;
+                                option.textContent = subcategory;
+                                subCategoryDropdown.appendChild(option);
+                            });
+                        } else {
+                            alert('No subcategories found for the selected main category.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching subcategories:', error);
+                        alert('Error fetching subcategories. Please try again.');
+                    });
+            }
+        });
+    });
+</script>
+
+<h2>Add Items to Current Order</h2>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<p><strong>Order Details</strong></p>
+<ul>
+    <li><strong>Order ID:</strong> {{ order['orderID'] }}</li>
+    <li><strong>Order Date:</strong> {{ order['orderDate'] }}</li>
+    <li><strong>Order Notes:</strong> {{ order['orderNotes'] }}</li>
+    <li><strong>Supervisor:</strong> {{ order['supervisor'] }}</li>
+    <li><strong>Client:</strong> {{ order['client'] }}</li>
+</ul>
+
+<form method="GET" action="/add_to_order">
+    <label for="mainCategory">Main Category:</label>
+    <select name="mainCategory" id="mainCategory" required>
+        <option value="" disabled selected>Select a category</option>
+        {% for category in categories %}
+            <option value="{{ category['mainCategory'] }}" {% if category['mainCategory'] == request.args.get('mainCategory') %}selected{% endif %}>
+                {{ category['mainCategory'] }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="subCategory">Subcategory:</label>
+    <select name="subCategory" id="subCategory" required>
+        <option value="" disabled selected>Select a subcategory</option>
+    </select>
+
+    <button type="submit">Filter Items</button>
+</form>
+
+{% if items %}
+    <h3>Available Items</h3>
+    <form method="POST" action="/add_to_order">
+        <label for="itemID">Select Item:</label>
+        <select name="itemID" id="itemID" required>
+            {% for item in items %}
+                <option value="{{ item['ItemID'] }}">{{ item['iDescription'] }} (ID: {{ item['ItemID'] }})</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add to Order</button>
+    </form>
+
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Find Order Items</h2>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <label for="orderID">Order ID:</label>
+    <input type="text" name="orderID" id="orderID" placeholder="Enter Order ID">
+    <button type="submit">Search</button>
+</form>
+
+{% if order %}
+    <h3>Order Details</h3>
+    <p><strong>Order ID:</strong> {{ order.orderID }}</p>
+    <p><strong>Order Date:</strong> {{ order.orderDate }}</p>
+    <p><strong>Notes:</strong> {{ order.orderNotes }}</p>
+
+    <h3>Items in the Order</h3>
+    <ul>
+        {% for item in items %}
+            <li>
+                <strong>Item:</strong> {{ item.item.iDescription }}<br>
+                <strong>Pieces:</strong>
+                <ul>
+                    {% for piece in item.pieces %}
+                        <li>Piece {{ piece.pieceNum }} - Room: {{ piece.roomNum }}, Shelf: {{ piece.shelfNum }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Find Item</h2>
+<form method="POST">
+    <label for="itemID">Item ID:</label>
+    <input type="text" id="itemID" name="itemID" required>
+    <button type="submit">Search</button>
+</form>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% if item %}
+<h3>Item Details</h3>
+<p><strong>ID:</strong> {{ item.itemID }}</p>
+<p><strong>Description:</strong> {{ item.iDescription }}</p>
+
+<h3>Locations</h3>
+{% if pieces %}
+<table>
+    <thead>
+        <tr>
+            <th>Piece Number</th>
+            <th>Room Number</th>
+            <th>Shelf Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for piece in pieces %}
+        <tr>
+            <td>{{ piece.pieceNum }}</td>
+            <td>{{ piece.roomNum }}</td>
+            <td>{{ piece.shelfNum }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No locations found for this item.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Welcome, {{ username }}!</h2>
+<p>Your role is {{ role }}.</p>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<!-- Buttons for navigation -->
+<div>
+    <button onclick="location.href='/logout'" class="btn btn-danger">Logout</button>
+    <button onclick="location.href='/find_item'" class="btn btn-primary">Find Item</button>
+    <button onclick="location.href='/find_order'" class="btn btn-primary">Find Order</button>
+    <button onclick="location.href='/accept_donation'" class="btn btn-primary">Accept Donation</button>
+
+    <!-- Newly added features -->
+    {% if role == 'staff' %}
+        <button onclick="location.href='/prepare_order'" class="btn btn-primary">Prepare Order</button>
+    {% endif %}
+    <button onclick="location.href='/prepare_order'" class="btn btn-primary">Prepare Order</button>
+    <button onclick="location.href='/user_tasks'" class="btn btn-primary">User Tasks</button>
+    <button onclick="location.href='/rank_categories'" class="btn btn-primary">Rank Categories</button>
+</div>
+{% endblock %}

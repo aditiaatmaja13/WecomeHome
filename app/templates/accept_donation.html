@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Accept Donation</h2>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="/accept_donation">
+    <h3>Donor Information</h3>
+    <label for="donorID">Donor ID:</label>
+    <input type="text" id="donorID" name="donorID" required>
+
+    <h3>Item Details</h3>
+    <label for="iDescription">Description:</label>
+    <input type="text" id="iDescription" name="iDescription" required>
+    <label for="color">Color:</label>
+    <input type="text" id="color" name="color">
+    <label for="isNew">Is New:</label>
+    <select id="isNew" name="isNew">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+    <label for="hasPieces">Has Pieces:</label>
+    <select id="hasPieces" name="hasPieces">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+    <label for="material">Material:</label>
+    <input type="text" id="material" name="material">
+    <label for="mainCategory">Main Category:</label>
+    <input type="text" id="mainCategory" name="mainCategory">
+    <label for="subCategory">Sub Category:</label>
+    <input type="text" id="subCategory" name="subCategory">
+
+    <h3>Location Details</h3>
+    <label for="roomNum">Room Number:</label>
+    <input type="number" id="roomNum" name="roomNum" required>
+    <label for="shelfNum">Shelf Number:</label>
+    <input type="number" id="shelfNum" name="shelfNum" required>
+
+    <h3>Piece Details</h3>
+    <label for="length">Length:</label>
+    <input type="number" id="length" name="length" required>
+    <label for="width">Width:</label>
+    <input type="number" id="width" name="width" required>
+    <label for="height">Height:</label>
+    <input type="number" id="height" name="height" required>
+    <label for="pNotes">Notes:</label>
+    <textarea id="pNotes" name="pNotes"></textarea>
+
+    <button type="submit">Record Donation</button>
+</form>
+{% endblock %}

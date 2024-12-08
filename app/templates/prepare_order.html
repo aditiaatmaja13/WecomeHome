@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Prepare Order</h2>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="/prepare_order">
+    <h3>Search for Order</h3>
+    <label for="orderID">Order ID:</label>
+    <input type="text" id="orderID" name="orderID" required>
+    <button type="submit">Prepare Order</button>
+</form>
+
+{% if order %}
+<h3>Order Details</h3>
+<p><strong>Order ID:</strong> {{ order.orderID }}</p>
+<p><strong>Order Date:</strong> {{ order.orderDate }}</p>
+<p><strong>Client:</strong> {{ order.client }}</p>
+<p><strong>Supervisor:</strong> {{ order.supervisor }}</p>
+
+<h4>Items in Order</h4>
+<ul>
+    {% for item in items %}
+        <li>
+            <strong>Item ID:</strong> {{ item.ItemID }},
+            <strong>Description:</strong> {{ item.iDescription }},
+            <strong>Status:</strong> {{ 'Found' if item.found else 'Not Found' }}
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}
